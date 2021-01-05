@@ -94,6 +94,19 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
 
   static defaultProps = { skipMessage: false, spanLinks: undefined, queryOfResults: undefined };
 
+  /* export span logs as a json file */
+  downloadTraces = (traces) =>{
+    const fileData = JSON.stringify({ traces: [traces.map((trace) => (
+     trace.spans
+    ))]}, null,2)
+    const blob = new Blob([fileData], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'filename.json';
+    link.href = url;
+    link.click();
+  }
+
   toggleComparison = (traceID: string, remove: boolean) => {
     const { cohortAddTrace, cohortRemoveTrace } = this.props;
     if (remove) {
@@ -155,6 +168,11 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
     }
     const cohortIds = new Set(diffCohort.map(datum => datum.id));
     const searchUrl = queryOfResults ? getUrl(stripEmbeddedState(queryOfResults)) : getUrl();
+
+    const reqTxt =  JSON.stringify({ traces: [traces.slice(1,5).map((trace) => (
+        trace.spans
+    ))]}, null,2)
+
     return (
       <div className="SearchResults">
         <div className="SearchResults--header">
@@ -174,6 +192,7 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
               />
             </div>
           )}
+
           <div className="SearchResults--headerOverview">
             <h2 className="ub-m0 u-flex-1">
               {traces.length} Trace{traces.length > 1 && 's'}
@@ -190,6 +209,7 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
                 <NewWindowIcon isLarge />
               </Link>
             )}
+
           </div>
         </div>
         {!traceResultsView && (
@@ -197,6 +217,12 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
             <SearchResultsDDG location={location} history={history} />
           </div>
         )}
+
+        <button type="button" onClick={() => this.downloadTraces(traces)}>Download traces as JSON</button>
+        <textarea
+          value={reqTxt}
+        />
+
         {traceResultsView && diffSelection}
         {traceResultsView && (
           <ul className="ub-list-reset">
