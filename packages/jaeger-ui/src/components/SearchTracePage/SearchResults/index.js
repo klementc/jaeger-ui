@@ -95,10 +95,10 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
   static defaultProps = { skipMessage: false, spanLinks: undefined, queryOfResults: undefined };
 
   /* export span logs as a json file */
-  downloadTraces = (traces) =>{
-    const fileData = JSON.stringify({ traces: [traces.map((trace) => (
+  downloadTraces = traces =>{
+    const fileData = JSON.stringify({ traces: traces.map(trace => (
      trace.spans
-    ))]}, null,2)
+    ))}, null,2)
     const blob = new Blob([fileData], {type: "text/plain"});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -169,9 +169,9 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
     const cohortIds = new Set(diffCohort.map(datum => datum.id));
     const searchUrl = queryOfResults ? getUrl(stripEmbeddedState(queryOfResults)) : getUrl();
 
-    const reqTxt =  JSON.stringify({ traces: [traces.slice(1,5).map((trace) => (
+    const reqTxt =  JSON.stringify({ traces: traces.slice(1,5).map(trace => (
         trace.spans
-    ))]}, null,2)
+    ))}, null,2)
 
     return (
       <div className="SearchResults">

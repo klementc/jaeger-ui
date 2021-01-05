@@ -13,14 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+.export {
+  background-color:black;
+  width:100%;
+}
+.export > textarea {
+  width:100%;
+}
 .DependencyGraph--graphWrapper {
   bottom: 1rem;
   left: 1rem;
   overflow: hidden;
   position: fixed;
   right: 1rem;
-  top: 120px;
+  top: 200px;
 }
 
 .rv-force__node {

@@ -1,3 +1,6 @@
+/* eslint-disable no-trailing-spaces */
+
+
 // Copyright (c) 2017 Uber Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,6 +73,23 @@ export class DependencyGraphPageImpl extends Component {
     this.props.fetchDependencies();
   }
 
+  /* export dependencies as dot file */
+  downloadDotGraph = (nodes,links) =>{
+    const prefix="digraph {\n\trankdir=\"LR\";\n\t";
+    const suffix="\n}"
+    const nodesDot=nodes.map(n => n.id.replaceAll("-","_")).join("\n\t")
+    const edgesDot=links.map(l => `${l.source.replaceAll("-","_")} -> ${l.target.replaceAll("-","_")}`).join("\n\t")
+
+    const fileData = `${prefix}${nodesDot}${edgesDot}${suffix}`
+
+    const blob = new Blob([fileData], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'graph.dot';
+    link.href = url;
+    link.click();
+  }
+
   handleGraphTypeChange = graphType => this.setState({ graphType });
 
   render() {
@@ -92,7 +112,19 @@ export class DependencyGraphPageImpl extends Component {
       GRAPH_TYPE_OPTIONS.push(GRAPH_TYPES.DAG);
     }
 
+    const prefix="digraph {\n\t";
+    const suffix="\n}"
+    const nodesDot=nodes.map(n => n.id).join("\n\t")
+    const edgesDot=links.map(l => `${l.source}"->"${l.target}`).join("\n\t")
+
     return (
+      <div>
+        <div className="export">
+          <button type="button" onClick={() => this.downloadDotGraph(nodes, links)}>Download graph as DOT file</button>
+          <textarea id="test"
+            value={`${prefix}${nodesDot}${edgesDot}${suffix}`}
+          />
+        </div>
       <Tabs
         onChange={this.handleGraphTypeChange}
         activeKey={graphType}
@@ -108,6 +140,7 @@ export class DependencyGraphPageImpl extends Component {
           </TabPane>
         ))}
       </Tabs>
+      </div>
     );
   }
 }
