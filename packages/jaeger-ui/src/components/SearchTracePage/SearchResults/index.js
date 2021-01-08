@@ -95,10 +95,10 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
   static defaultProps = { skipMessage: false, spanLinks: undefined, queryOfResults: undefined };
 
   /* export span logs as a json file */
-  downloadTraces = traces =>{
+  downloadTraces = (traces,pretty) =>{
     const fileData = JSON.stringify({ traces: traces.map(trace => (
      trace.spans
-    ))}, null,2)
+    ))}, null,pretty)
     const blob = new Blob([fileData], {type: "text/plain"});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -218,7 +218,9 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
           </div>
         )}
 
-        <button type="button" onClick={() => this.downloadTraces(traces)}>Download traces as JSON</button>
+        <button className="ant-btn" type="button" onClick={() => this.downloadTraces(traces,0)}>Download traces as JSON</button>
+        <button className="ant-btn" type="button" onClick={() => this.downloadTraces(traces,2)}>Download traces as JSON (pretty)</button>
+        <hr/>
         <textarea
           value={reqTxt}
         />

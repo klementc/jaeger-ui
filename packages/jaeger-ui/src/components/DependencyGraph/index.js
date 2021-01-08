@@ -112,7 +112,7 @@ export class DependencyGraphPageImpl extends Component {
       GRAPH_TYPE_OPTIONS.push(GRAPH_TYPES.DAG);
     }
 
-    const prefix="digraph {\n\t";
+    const prefix="digraph {\n\trankdir=\"LR\";\n\t";
     const suffix="\n}"
     const nodesDot=nodes.map(n => n.id).join("\n\t")
     const edgesDot=links.map(l => `${l.source}"->"${l.target}`).join("\n\t")
@@ -120,10 +120,12 @@ export class DependencyGraphPageImpl extends Component {
     return (
       <div>
         <div className="export">
-          <button type="button" onClick={() => this.downloadDotGraph(nodes, links)}>Download graph as DOT file</button>
           <textarea id="test"
             value={`${prefix}${nodesDot}${edgesDot}${suffix}`}
           />
+          <hr/>
+          <button className="ant-btn" type="button" onClick={() => this.downloadDotGraph(nodes, links)}>Download graph as DOT file</button>
+          <hr/>
         </div>
       <Tabs
         onChange={this.handleGraphTypeChange}
