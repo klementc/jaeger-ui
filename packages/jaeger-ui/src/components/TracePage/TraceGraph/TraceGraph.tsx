@@ -18,6 +18,7 @@ import cx from 'classnames';
 import { Digraph, LayoutManager } from '@jaegertracing/plexus';
 import cacheAs from '@jaegertracing/plexus/lib/cacheAs';
 
+import { TEdge } from '@jaegertracing/plexus/lib/types';
 import {
   getNodeRenderer,
   getNodeFindEmphasisRenderer,
@@ -147,6 +148,27 @@ export default class TraceGraph extends React.PureComponent<Props, State> {
   closeSidebar = () => {
     this.setState({ showHelp: false });
   };
+  /* bricolage pour export dot */
+  downloadDotGraph = (g: TEv/*nodes: TDagPlexusVertex<TSumSpan & TDenseSpanMembers>[],links: TEdge<{followsFrom: boolean;}>[]*/) =>{
+    const prefix="digraph {\n\trankdir=\"LR\";\n\t";
+    const suffix="\n}"
+    const keyToServName = new Map()
+    g.vertices.map(n => keyToServName.set(n.key,n.data.service))
+
+    g.vertices[0].data.selfTime
+    //nodes[0].data.œ
+    const nodesDot=g.vertices.map(n => `${n.data.service.replace("-","_")}[label=\"${n.data.selfTime.toString()}\"]`).join("\n\t")
+    const edgesDot=g.edges.map(l => `${keyToServName.get(l.from).replace("-","_")} -> ${keyToServName.get(l.to).replace("-","_")}`).join("\n\t")
+
+    const fileData = `${prefix}\n\t${nodesDot}\n\t${edgesDot}\n\t${suffix}`
+
+    const blob = new Blob([fileData], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'graph.dot';
+    link.href = url;
+    link.click();
+  }
 
   render() {
     const { ev, headerHeight, uiFind, uiFindVertexKeys } = this.props;
@@ -159,6 +181,10 @@ export default class TraceGraph extends React.PureComponent<Props, State> {
 
     return (
       <div className={wrapperClassName} style={{ paddingTop: headerHeight + 47 }}>
+        <div className="export">
+          <button type="button" onClick={() => this.downloadDotGraph(/*ev.vertices, ev.edges*/ev  )}>Download graph as DOT file</button>
+        </div>
+
         <Digraph<TDagPlexusVertex<TSumSpan & TDenseSpanMembers>>
           minimap
           zoom
