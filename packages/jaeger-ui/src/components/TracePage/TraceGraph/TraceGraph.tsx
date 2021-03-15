@@ -157,8 +157,8 @@ export default class TraceGraph extends React.PureComponent<Props, State> {
 
     g.vertices[0].data.selfTime
     //nodes[0].data.œ
-    const nodesDot=g.vertices.map(n => `${n.data.service.replace("-","_")}[label=\"${n.data.selfTime.toString()}\"]`).join("\n\t")
-    const edgesDot=g.edges.map(l => `${keyToServName.get(l.from).replace("-","_")} -> ${keyToServName.get(l.to).replace("-","_")}`).join("\n\t")
+    const nodesDot=g.vertices.map(n => `${n.key.replace(/[^A-Za-z]+/g,"")}[label=\"${n.data.service.replace(/-/g,"_")}\" dur=\"${n.data.selfTime.toString()}\"]`).join("\n\t")
+    const edgesDot=g.edges.map(l => `${/*keyToServName.get(*/l.from/*)*/.replace(/[^A-Za-z]+/g,"")} -> ${/*keyToServName.get(*/l.to/*)*/.replace(/[^A-Za-z]+/g,"")}`).join("\n\t")
 
     const fileData = `${prefix}\n\t${nodesDot}\n\t${edgesDot}\n\t${suffix}`
 
