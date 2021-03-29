@@ -1,12 +1,43 @@
 [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov] [![FOSSA Status][fossa-img]][fossa]
 
+# Modification usage
+
+The goal of this forked jaeger-ui is to allow exporting a trace graph as a dot file.
+This Dot file can in turn be used to build a microservice simulator using SimGrid, that will correspond to the downloaded trace.
+
+Follow the steps below to obtain this file:
+
+- Start your application
+- Invoke requests that will be registered to jaeger (this repo only contains the frond-end, you need to run jaeger separately).
+- Run this frond-end and select the trace that fits your needs
+
+
+|              Trace Search                              |
+| :----------------------------------------------------: |
+| ![Trace Search modif](./media/example_tracesearch.png) |
+
+- Go to the graph representation of your trace by clicking on the top right menu
+
+|              Trace Selection                            |
+| :----------------------------------------------------:  |
+| ![Trace Search modif1](./media/example_traceselect.png) |
+
+- Download by clicking on the "Downaload as a DOT file button". See an example of the output graph (corresponding to the trace you selected)
+
+|              Trace Search                          |             Trace Details                         |
+| :------------------------------------:             | :------------------------------------:            |
+| ![Trace Searc1](./media/example_tracedownload.png) | ![Trace Detail1](./media/example_traceresult.png) |
+
+
 # Jaeger UI
 
 Visualize distributed tracing with Jaeger.
 
-|              Trace Search              |             Trace Details              |
+
+|              Trace Download              |             Trace Details              |
 | :------------------------------------: | :------------------------------------: |
 | ![Trace Search](./media/ss_search.png) | ![Trace Details](./media/ss_trace.png) |
+
 
 ## Contributing
 
